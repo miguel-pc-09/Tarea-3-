@@ -1,0 +1,104 @@
+
+/*Ajustes o estilos cuadro del formulario*/
+fieldset{
+    background-color: rgb(152, 224, 228);
+    border: 5px solid rgb(58, 163, 170);
+    border-radius: 10px;
+    max-width: 400px;
+    margin: auto;
+    padding: 40px;
+    text-align: center;
+
+
+    
+}
+
+/*Fondo General */
+body{
+    
+    background-image: url(images/agua\ clara.webp);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /*apila el logo con el formulario */
+  }
+  
+
+/*Titulo */
+h1{
+    color: rgb(41, 41, 240);
+    text-shadow: 2px 2px 4px coral;
+}
+
+/* Logo */
+.logo img {
+    width: 260px;
+    display: block;
+    margin: 0 auto;
+}
+
+
+/* Inputs de texto */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 80%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+
+/* Botón mostrar/ocultar contraseña */
+.boton-mostrar {
+    display: inline-block;
+    background-color: rgb(58, 163, 170);
+    color: black;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+/* Botón de enviar */
+.bton-enviar {
+    background-color: rgb(58, 163, 170);
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+/* Teclado virtual */
+.teclado {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+
+ .tecla {
+    padding: 10px 15px;
+    background-color: rgb(58, 163, 170);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
