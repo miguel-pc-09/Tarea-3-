@@ -1,5 +1,5 @@
 // Función global para mostrar/ocultar contraseñas
-//-------------------------------------------------
+
 function mostrarOcultar(idCampo, boton){                // Obtiene el input por ID
     const input = document.getElementById(idCampo);
     if (input.type === "password") {
