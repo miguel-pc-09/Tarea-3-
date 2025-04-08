@@ -1,29 +1,29 @@
 // Función global para mostrar/ocultar contraseñas
 //-------------------------------------------------
-function mostrarOcultar(idCampo, boton){
+function mostrarOcultar(idCampo, boton){                // Obtiene el input por ID
     const input = document.getElementById(idCampo);
     if (input.type === "password") {
-        input.type = "text";
+        input.type = "text";                           // Muestra la contraseña
         boton.textContent = "Ocultar contraseña";
     } else {
-        input.type = "password";
+        input.type = "password";                       // Oculta la contraseña
         boton.textContent = 'Mostrar contraseña';
     }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    
     // Estado del teclado virtual
-    //------------------------------
-    let mayusculas = true;
-    campoActivo = null; // Campo de contraseña o confirmar que esté activo
+    let mayusculas = true;                        // Controla si el teclado está en mayúsculas
+    campoActivo = null;                           // Campo de contraseña o confirmar que esté activo
 
-    // -----------------------
-    // VALIDACIÓN DE REGISTRO |
-    // -----------------------
+    
+    // VALIDACIÓN DE REGISTRO 
+    
     const formulario = document.getElementById("formulario");
 
     formulario.addEventListener("submit", function(event) {
-        event.preventDefault(); // Evita que se envíe el formulario
+        event.preventDefault();                 // Evita que se envíe el formulario o recargue la pagina
 
         const nombre = document.getElementById("nombre").value.trim();
         const correo = document.getElementById("correo").value.trim();
@@ -31,14 +31,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const confirmar = document.getElementById("confirmar").value;
 
         // Validar campos vacíos
-        //-------------------------
+       
         if (!nombre || !correo || !contrasena || !confirmar) {
             alert("⚠️ Por favor, completa todos los campos.");
             return;
         }
 
         // Validar correo con expresión regular
-        //--------------------------------------
+        
         const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!correoRegex.test(correo)) {
             alert("⚠️ Por favor, introduce un correo electrónico válido.");
@@ -46,20 +46,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Validar que contraseñas coinciden
-        //-----------------------------------
+        
         if (contrasena !== confirmar) {
             alert("❌ Las contraseñas no coinciden.");
             return;
         }
 
-        // Si todo está bien
-        //---------------------
+        // Si todo está bien, envia el mensaje
+        
         alert(`✅ ¡Registro exitoso! Bienvenido, ${nombre}.`);
     });
 
-    // ------------------------------------------------------------------
+    
     // BOTONES MOSTRAR/OCULTAR SIEMPRE VISIBLES Y DETECTAR INPUT ACTIVO  |
-    // ------------------------------------------------------------------
+    // Detecta el campo activo
     const contrasena = document.getElementById("contrasena");
     const confirmar = document.getElementById("confirmar");
     const btnContrasena = document.getElementById("btonContrasena");
@@ -73,26 +73,26 @@ document.addEventListener("DOMContentLoaded", () => {
         campoActivo = confirmar;
     });
 
-    // -----------------
-    // TECLADO VIRTUAL |
-    // -----------------
+    
+    // TECLADO VIRTUAL 
+    
     const teclas = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM@.-←";
     const teclado = document.getElementById("teclado");
 
     // Botón Mayús
-    //---------------
+    
     const teclaMayus = document.createElement("button");
     teclaMayus.textContent = "Mayús";
     teclaMayus.classList.add("tecla");
     teclaMayus.addEventListener("click", (e) => {
-        e.preventDefault();
-        mayusculas = !mayusculas;
-        actualizarTeclado();
+        e.preventDefault();            // Evita el comportamiento por defecto
+        mayusculas = !mayusculas;      // Cambia el estado de mayúsculas
+        actualizarTeclado();            // Redibuja el teclado
     });
     teclado.appendChild(teclaMayus);
 
     // Función que genera el teclado (regenera según mayúsculas)
-    //------------------------------------------------------------
+    
     function actualizarTeclado() {
         // Elimina todas las teclas excepto el botón Mayús
         teclado.querySelectorAll(".tecla").forEach(btn => {
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Generar teclas
-        //----------------
+       
         for (let tecla of teclas) {
             let mostrar = tecla;
             if (/[A-Z]/.test(tecla)) {
@@ -117,9 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
                 if (campoActivo) {
                     if (tecla === "←") {
-                        campoActivo.value = campoActivo.value.slice(0, -1);
+                        campoActivo.value = campoActivo.value.slice(0, -1); // Para borrar la ultima letra
                     } else {
-                        campoActivo.value += mostrar;
+                        campoActivo.value += mostrar;  // Añade la letra
                     }
                 }
             });
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Generar por primera vez el teclado
-    //---------------------------------------
+    // Generar por primera vez el teclado aunque recargue la pagina
+    
     actualizarTeclado();
 });
