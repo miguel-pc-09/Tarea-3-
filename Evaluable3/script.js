@@ -1,134 +1,97 @@
-// Función global para mostrar/ocultar contraseñas
-
-function mostrarOcultar(idCampo, boton){                // Obtiene el input por ID
-    const input = document.getElementById(idCampo);
+// Función para mostrar u ocultar la contraseña
+function mostrarOcultar(idCampo, boton) {
+    const input = document.getElementById(idCampo); // Se obtiene el input correspondiente por su ID
     if (input.type === "password") {
-        input.type = "text";                           // Muestra la contraseña
-        boton.textContent = "Ocultar contraseña";
+        input.type = "text";                       // Si está en modo contraseña, se cambia a texto
+        boton.textContent = "Ocultar";             // Se cambia el texto del botón
     } else {
-        input.type = "password";                       // Oculta la contraseña
-        boton.textContent = 'Mostrar contraseña';
+        input.type = "password";                   // Si ya está en texto, se vuelve a contraseña
+        boton.textContent = "Mostrar";             // Se actualiza el texto del botón
     }
 }
 
+// Espera a que todo el documento esté cargado
 document.addEventListener("DOMContentLoaded", () => {
-    
-    // Estado del teclado virtual
-    let mayusculas = true;                        // Controla si el teclado está en mayúsculas
-    campoActivo = null;                           // Campo de contraseña o confirmar que esté activo
+    let campoActivo = null;                      // Guardará el input de contraseña que está activo
+    let mayusculas = true;                       // Controla si el teclado está en modo mayúsculas
 
-    
-    // VALIDACIÓN DE REGISTRO 
-    
-    const formulario = document.getElementById("formulario");
+    // Detecta cuando el usuario hace clic en el campo de contraseña o confirmar
+    document.getElementById("contrasena").addEventListener("focus", () => campoActivo = document.getElementById("contrasena"));
+    document.getElementById("confirmar").addEventListener("focus", () => campoActivo = document.getElementById("confirmar"));
 
-    formulario.addEventListener("submit", function(event) {
-        event.preventDefault();                 // Evita que se envíe el formulario o recargue la pagina
+    const teclas = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM@.-←";     // Lista de caracteres del teclado
+    const teclado = document.getElementById("teclado");            // Elemento contenedor del teclado virtual
 
-        const nombre = document.getElementById("nombre").value.trim();
-        const correo = document.getElementById("correo").value.trim();
-        const contrasena = document.getElementById("contrasena").value;
-        const confirmar = document.getElementById("confirmar").value;
-
-        // Validar campos vacíos
-       
-        if (!nombre || !correo || !contrasena || !confirmar) {
-            alert("⚠️ Por favor, completa todos los campos.");
-            return;
-        }
-
-        // Validar correo con expresión regular
-        
-        const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!correoRegex.test(correo)) {
-            alert("⚠️ Por favor, introduce un correo electrónico válido.");
-            return;
-        }
-
-        // Validar que contraseñas coinciden
-        
-        if (contrasena !== confirmar) {
-            alert("❌ Las contraseñas no coinciden.");
-            return;
-        }
-
-        // Si todo está bien, envia el mensaje
-        
-        alert(`✅ ¡Registro exitoso! Bienvenido, ${nombre}.`);
+    // Crea el botón de Mayús
+    const btnMayus = document.createElement("button");            // Crea el botón
+    btnMayus.classList.add("tecla");                              // Añade la clase CSS
+    btnMayus.textContent = "Mayús";                               // Texto del botón
+    btnMayus.addEventListener("click", (e) => {
+        e.preventDefault();                                       // Evita que el botón envíe un formulario
+        mayusculas = !mayusculas;                                 // Cambia el estado de mayúsculas a minúsculas o viceversa
+        actualizarTeclado();                                      // Regenera el teclado con el nuevo estado
     });
+    teclado.appendChild(btnMayus);                                // Añade el botón Mayús al contenedor del teclado
 
-    
-    // BOTONES MOSTRAR/OCULTAR SIEMPRE VISIBLES Y DETECTAR INPUT ACTIVO  |
-    // Detecta el campo activo
-    const contrasena = document.getElementById("contrasena");
-    const confirmar = document.getElementById("confirmar");
-    const btnContrasena = document.getElementById("btonContrasena");
-    const btnConfirmar = document.getElementById("btonConfirmar");
-
-    contrasena.addEventListener("focus", () => {
-        campoActivo = contrasena;
-    });
-
-    confirmar.addEventListener("focus", () => {
-        campoActivo = confirmar;
-    });
-
-    
-    // TECLADO VIRTUAL 
-    
-    const teclas = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM@.-←";
-    const teclado = document.getElementById("teclado");
-
-    // Botón Mayús
-    
-    const teclaMayus = document.createElement("button");
-    teclaMayus.textContent = "Mayús";
-    teclaMayus.classList.add("tecla");
-    teclaMayus.addEventListener("click", (e) => {
-        e.preventDefault();            // Evita el comportamiento por defecto
-        mayusculas = !mayusculas;      // Cambia el estado de mayúsculas
-        actualizarTeclado();            // Redibuja el teclado
-    });
-    teclado.appendChild(teclaMayus);
-
-    // Función que genera el teclado (regenera según mayúsculas)
-    
+    // Función que actualiza las teclas en pantalla
     function actualizarTeclado() {
-        // Elimina todas las teclas excepto el botón Mayús
+        // Elimina todas las teclas anteriores excepto el botón Mayús
         teclado.querySelectorAll(".tecla").forEach(btn => {
-            if (btn.textContent !== "Mayús") {
+            if (btn !== btnMayus) {
                 btn.remove();
             }
         });
 
-        // Generar teclas
-       
+        // Recorre cada carácter y crea un botón correspondiente
         for (let tecla of teclas) {
-            let mostrar = tecla;
-            if (/[A-Z]/.test(tecla)) {
-                mostrar = mayusculas ? tecla : tecla.toLowerCase();
-            }
+            // Convierte a minúscula si es una letra y el estado lo requiere
+            let mostrar = /[A-Z]/.test(tecla) ? (mayusculas ? tecla : tecla.toLowerCase()) : tecla;
 
-            const btn = document.createElement("button");
-            btn.classList.add("tecla");
-            btn.textContent = mostrar;
+            const btn = document.createElement("button");        // Crea un botón por cada tecla
+            btn.classList.add("tecla");                          // Le aplica el estilo CSS
+            btn.textContent = mostrar;                           // Muestra el carácter correspondiente
 
+            // Evento al hacer clic en una tecla
             btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                if (campoActivo) {
+                e.preventDefault();                              // Evita que se envíe el formulario
+                if (campoActivo) {                               // Si hay un campo activo (contraseña o confirmar)
                     if (tecla === "←") {
-                        campoActivo.value = campoActivo.value.slice(0, -1); // Para borrar la ultima letra
+                        campoActivo.value = campoActivo.value.slice(0, -1);  // Borra el último carácter
                     } else {
-                        campoActivo.value += mostrar;  // Añade la letra
+                        campoActivo.value += mostrar;                        // Añade el carácter al input
                     }
                 }
             });
 
-            teclado.appendChild(btn);
+            teclado.appendChild(btn);                                        // Añade la tecla al contenedor del teclado
         }
     }
 
-    // Generar por primera vez el teclado aunque recargue la pagina
-    
-    actualizarTeclado();
+    actualizarTeclado();                                          // Inicializa el teclado al cargar la página
+
+    // Validación del formulario al hacer clic en Registrarse
+    document.getElementById("formulario").addEventListener("submit", (e) => {
+        e.preventDefault();                                       // Evita que el formulario se envíe de verdad
+
+        // Captura los valores de los campos
+        const nombre = document.getElementById("nombre").value.trim();
+        const correo = document.getElementById("correo").value.trim();
+        const pass1 = document.getElementById("contrasena").value;
+        const pass2 = document.getElementById("confirmar").value;
+
+        // Verifica que todos los campos estén rellenos
+        if (!nombre || !correo || !pass1 || !pass2) {
+            alert("Por favor, rellena todos los campos.");
+            return;
+        }
+
+        // Verifica que las contraseñas coincidan
+        if (pass1 !== pass2) {
+            alert("Las contraseñas no coinciden.");
+            return;
+        }
+
+        // Si todo está bien, muestra mensaje de bienvenida
+        alert(`Registro exitoso. Bienvenido, ${nombre}`);
+    });
 });
